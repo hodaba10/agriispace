@@ -1,0 +1,39 @@
+{% extends 'ispace/base.html' %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="card shadow-lg border-0">
+        <div class="card-header bg-danger text-white">
+            <h3 class="mb-0">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                Confirmation de suppression
+            </h3>
+        </div>
+        <div class="card-body">
+            <div class="alert alert-warning">
+                <h4 class="alert-heading">Attention !</h4>
+                <p>Vous êtes sur le point de supprimer définitivement cette dépense :</p>
+                <hr>
+                <ul class="mb-0">
+                    <li><strong>Date :</strong> {{ object.date|date:"d/m/Y" }}</li>
+                    <li><strong>Bande :</strong> {{ object.bande.code_bande }}</li>
+                    <li><strong>Catégorie :</strong> {{ object.categorie.nom }}</li>
+                    <li><strong>Montant :</strong> {{ object.montant_fcfa|floatformat:2 }} FCFA</li>
+                </ul>
+            </div>
+
+            <form method="post">
+                {% csrf_token %}
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                    <a href="{% url 'depense_list' %}" class="btn btn-secondary me-md-2">
+                        <i class="bi bi-x-circle me-1"></i> Annuler
+                    </a>
+                    <button type="submit" class="btn btn-danger">
+                        <i class="bi bi-trash-fill me-1"></i> Confirmer la suppression
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

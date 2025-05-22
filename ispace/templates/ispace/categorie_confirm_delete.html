@@ -1,0 +1,49 @@
+{% extends 'ispace/base.html' %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="card shadow-lg border-0">
+        <div class="card-header bg-danger text-white">
+            <h3 class="mb-0">
+                <i class="bi bi-exclamation-octagon-fill me-2"></i>
+                Confirmation de suppression
+            </h3>
+        </div>
+        <div class="card-body">
+            <div class="alert alert-warning">
+                <h4 class="alert-heading">Action irréversible !</h4>
+                <p>Vous allez supprimer la catégorie : <strong>{{ object.nom }}</strong></p>
+                
+                {% if object.depenseavicole_set.count > 0 %}
+                <div class="mt-3 alert alert-danger">
+                    <i class="bi bi-flag-fill me-2"></i>
+                    <strong>Avertissement :</strong> Cette catégorie est utilisée dans 
+                    {{ object.depenseavicole_set.count }} dépense(s). La suppression entraînera :
+                    <ul class="mt-2">
+                        <li>La suppression de toutes les dépenses associées</li>
+                        <li>La perte définitive des données historiques</li>
+                    </ul>
+                </div>
+                {% else %}
+                <div class="mt-3 alert alert-info">
+                    <i class="bi bi-info-circle-fill me-2"></i>
+                    Cette catégorie n'est actuellement utilisée dans aucune dépense.
+                </div>
+                {% endif %}
+            </div>
+
+            <form method="post">
+                {% csrf_token %}
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                    <a href="{% url 'categorie_depense_list' %}" class="btn btn-secondary me-md-2">
+                        <i class="bi bi-arrow-left-circle me-1"></i> Retour
+                    </a>
+                    <button type="submit" class="btn btn-danger">
+                        <i class="bi bi-trash3-fill me-1"></i> Supprimer définitivement
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

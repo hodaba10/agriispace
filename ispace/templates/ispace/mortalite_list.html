@@ -1,0 +1,52 @@
+<!-- mortalite_list.html -->
+{% extends 'ispace/base.html' %}
+{% block content %}
+<div class="container py-4">
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+            <div class="d-flex justify-content-between align-items-center">
+                <h3><i class="bi bi-activity"></i> Suivie  Mortalité</h3>
+                <a href="{% url 'mortalite_add' %}" class="btn btn-light">
+                    <i class="bi bi-plus-circle"></i> Ajouter
+                </a>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Bande</th>
+                            <th>Effectif</th>
+                            <th>Description</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for mort in mortalites %}
+                        <tr>
+                            <td>{{ mort.date|date:"d/m/Y" }}</td>
+                            <td>{{ mort.bande.code_bande }}</td>
+                            <td>{{ mort.effectif }}</td>
+                            <td>{{ mort.description|truncatechars:30 }}</td>
+                            <td>
+                                <div class="btn-group">
+                                    <a href="{% url 'mortalite_edit' mort.id %}" class="btn btn-sm btn-warning">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <a href="{% url 'mortalite_delete' mort.id %}" class="btn btn-sm btn-danger" 
+                                       onclick="return confirm('Supprimer cet enregistrement?')">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

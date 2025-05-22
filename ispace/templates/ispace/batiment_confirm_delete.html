@@ -1,0 +1,18 @@
+{% extends 'ispace/base.html' %}
+{% block content %}
+<div class="container py-4">
+    <div class="card shadow border-danger">
+        <div class="card-header bg-danger text-white">
+            <h4>Suppression du bâtiment</h4>
+        </div>
+        <div class="card-body">
+            <p>Voulez-vous vraiment supprimer le bâtiment <strong>{{ object.designation }}</strong> ?</p>
+            <form method="post">
+                {% csrf_token %}
+                <a href="{% url 'batiment_list' %}" class="btn btn-secondary">Annuler</a>
+                <button type="submit" class="btn btn-danger">Supprimer</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

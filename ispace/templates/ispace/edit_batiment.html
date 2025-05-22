@@ -1,0 +1,199 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modifier Bâtiment - ISpace</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    
+    <style>
+        /* Styles personnalisés */
+        .form-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        }
+        
+        .form-header {
+            border-bottom: 2px solid #0d6efd;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .form-footer {
+            border-top: 2px solid #0d6efd;
+            padding-top: 20px;
+            margin-top: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .form-container {
+                padding: 15px;
+                margin: 15px;
+            }
+            
+            .btn-mobile-full {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+        }
+        
+        .required-field::after {
+            content: " *";
+            color: red;
+        }
+        
+        .invalid-feedback {
+            display: none;
+            color: #dc3545;
+        }
+        .is-invalid ~ .invalid-feedback {
+            display: block;
+        }
+    </style>
+</head>
+<body class="bg-light">
+    <div class="container py-5">
+        <div class="form-container bg-white">
+            <!-- En-tête du formulaire -->
+            <div class="form-header">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h2 class="mb-0">
+                        <i class="bi bi-building me-2"></i>
+                        Modifier le bâtiment
+                    </h2>
+                    <a href="{% url 'batiment' %}" class="btn btn-outline-secondary">
+                        <i class="bi bi-arrow-left"></i>
+                        <span class="d-none d-md-inline">Retour</span>
+                    </a>
+                </div>
+                <p class="text-muted mb-0">ID: {{ batiment.id }} | Code: {{ batiment.code }}</p>
+            </div>
+            
+            <!-- Formulaire d'édition -->
+            <form method="POST" action="{% url 'update_batiment' batiment.id %}">
+                {% csrf_token %}
+                
+                <div class="row g-3">
+                    <!-- Code du bâtiment -->
+                    <div class="col-md-6">
+                        <label for="code" class="form-label required-field">Code</label>
+                        <input type="text" class="form-control" id="code" name="code" 
+                               value="{{ batiment.code }}" required>
+                        <div class="invalid-feedback">Veuillez saisir un code.</div>
+                    </div>
+                    
+                    <!-- Désignation -->
+                    <div class="col-md-6">
+                        <label for="designation" class="form-label required-field">Désignation</label>
+                        <input type="text" class="form-control" id="designation" name="designation" 
+                               value="{{ batiment.designation }}" required>
+                        <div class="invalid-feedback">Veuillez saisir une désignation.</div>
+                    </div>
+                    
+                    <!-- Capacité -->
+                    <div class="col-md-6">
+                        <label for="capacite" class="form-label required-field">Capacité</label>
+                        <input type="number" class="form-control" id="capacite" name="capacite" 
+                               value="{{ batiment.capacite }}" min="1" required>
+                        <div class="invalid-feedback">Veuillez saisir une capacité valide.</div>
+                        <small class="text-muted">Unité: {{ batiment.unite_capacite }}</small>
+                    </div>
+                    
+                    <!-- Dimensions -->
+                    <div class="col-md-6">
+                        <label for="dimensions" class="form-label required-field">Dimensions (m)</label>
+                        <input type="text" class="form-control" id="dimensions" name="dimensions" 
+                               value="{{ batiment.dimensions }}" placeholder="ex: 10x5" required>
+                        <div class="invalid-feedback">Format attendu: longueur x largeur (ex: 10x5)</div>
+                        <small class="text-muted">Superficie calculée: {{ batiment.superficie }}</small>
+                    </div>
+                    
+                    <!-- Type de bâtiment -->
+                    <div class="col-12">
+                        <label for="type" class="form-label required-field">Type de bâtiment</label>
+                        <select class="form-select" id="type" name="type" required>
+                            <option value="elevage" {% if batiment.type == 'elevage' %}selected{% endif %}>Élevage</option>
+                            <option value="nourriture" {% if batiment.type == 'nourriture' %}selected{% endif %}>Stockage de nourriture</option>
+                            <option value="autre" {% if batiment.type == 'autre' %}selected{% endif %}>Autre</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <!-- Pied de page du formulaire -->
+                <div class="form-footer">
+                    <div class="d-flex flex-wrap justify-content-between">
+                        <button type="submit" class="btn btn-primary btn-lg btn-mobile-full">
+                            <i class="bi bi-check-circle me-2"></i>
+                            Enregistrer les modifications
+                        </button>
+                        
+                        <a href="{% url 'delete_batiment' batiment.id %}" 
+                           class="btn btn-danger btn-lg btn-mobile-full"
+                           onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce bâtiment ?');">
+                            <i class="bi bi-trash me-2"></i>
+                            Supprimer le bâtiment
+                        </a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Validation des champs en temps réel
+        document.addEventListener('DOMContentLoaded', function() {
+            // Validation du champ dimensions
+            const dimensionsField = document.getElementById('dimensions');
+            dimensionsField.addEventListener('input', function() {
+                const isValid = /^\d+(\.\d+)?x\d+(\.\d+)?$/.test(this.value);
+                this.classList.toggle('is-invalid', !isValid);
+            });
+            
+            // Validation globale du formulaire
+            const form = document.querySelector('form');
+            form.addEventListener('submit', function(event) {
+                let isValid = true;
+                
+                // Vérification des champs requis
+                document.querySelectorAll('[required]').forEach(field => {
+                    if (!field.value.trim()) {
+                        field.classList.add('is-invalid');
+                        isValid = false;
+                    }
+                });
+                
+                // Validation spécifique des dimensions
+                if (!/^\d+(\.\d+)?x\d+(\.\d+)?$/.test(dimensionsField.value)) {
+                    dimensionsField.classList.add('is-invalid');
+                    isValid = false;
+                }
+                
+                if (!isValid) {
+                    event.preventDefault();
+                    alert('Veuillez corriger les erreurs dans le formulaire.');
+                }
+            });
+            
+            // Réinitialisation des erreurs lors de la saisie
+            document.querySelectorAll('input, select').forEach(field => {
+                field.addEventListener('input', function() {
+                    this.classList.remove('is-invalid');
+                });
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,60 @@
+<!-- bande_list.html -->
+{% extends 'ispace/base.html' %}
+{% block content %}
+<div class="container py-4">
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+            <div class="d-flex justify-content-between align-items-center">
+                <h3><i class="bi bi-collection"></i> Bandes</h3>
+                <a href="{% url 'bande_add' %}" class="btn btn-light">
+                    <i class="bi bi-plus-circle"></i> Nouvelle Bande
+                </a>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Code</th>
+                            <th>Bâtiment</th>
+                            <th>Période</th>
+                            <th>Effectif</th>
+                            <th>Type</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for bande in bandes %}
+                        <tr>
+                            <td>{{ bande.code_bande }}</td>
+                            <td>{{ bande.batiment.designation }}</td>
+                            <td>
+                                {{ bande.date_debut|date:"d/m/Y" }} - {{ bande.date_fin|date:"d/m/Y" }}
+                            </td>
+
+                            <td>{{ bande.effectif_depart }}</td>
+                            <td>{{ bande.type_bande.libelle|default:"-" }}</td>
+                            <td>
+                                <div class="btn-group">
+                                    <a href="{% url 'bande_detail' bande.id %}" class="btn btn-sm btn-info">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                    <a href="{% url 'bande_edit' bande.id %}" class="btn btn-sm btn-warning">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                     <a href="{% url 'bande_delete' bande.id %}" class="btn btn-sm btn-danger"
+                                    onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette bande ?');">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

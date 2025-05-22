@@ -1,0 +1,51 @@
+{% extends 'ispace/base.html' %}
+{% block content %}
+<div class="container py-4">
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+            <div class="d-flex justify-content-between align-items-center">
+                <h3><i class="bi bi-tag"></i> Catégories de Dépenses</h3>
+                <a href="{% url 'categorie_depense_add' %}" class="btn btn-light">
+                    <i class="bi bi-plus-circle"></i> Ajouter
+                </a>
+            </div>
+        </div>
+        <div class="card-body">
+            {% if categories %}
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Nom</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for categorie in categories %}
+                        <tr>
+                            <td>{{ categorie.nom }}</td>
+                            <td>
+                                <div class="btn-group">
+                                    <a href="{% url 'categorie_depense_edit' categorie.id %}" 
+                                       class="btn btn-sm btn-warning">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <a href="{% url 'categorie_depense_delete' categorie.id %}" 
+                                       class="btn btn-sm btn-danger"
+                                       onclick="return confirm('Supprimer cette catégorie?')">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="alert alert-info">Aucune catégorie enregistrée</div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
